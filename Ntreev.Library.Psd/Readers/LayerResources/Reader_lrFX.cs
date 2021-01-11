@@ -30,14 +30,13 @@ namespace Ntreev.Library.Psd.Readers.LayerResources
         {
 
         }
-
         protected override void ReadValue(PsdReader reader, object userData, out IProperties value)
         {
-            value = new Properties();
+            value = new Properties(7);
 
             short version = reader.ReadInt16();
             int count = reader.ReadInt16();
-
+            Properties props = new Properties(7);
             for (int i = 0; i < count; i++)
             {
                 string _8bim = reader.ReadAscii(4);
@@ -49,7 +48,24 @@ namespace Ntreev.Library.Psd.Readers.LayerResources
                 {
                     case "dsdw":
                         {
-                            //ShadowInfo.Parse(reader);
+                            Properties shadowProps = new Properties(12);
+                            shadowProps["Size"] = reader.ReadByte();
+                            shadowProps["Version"] = reader.ReadByte();
+                            shadowProps["BlurValue"] = reader.ReadInt32();
+                            shadowProps["Intensity"] = reader.ReadInt32();
+                            shadowProps["Angle"] = reader.ReadInt32();
+                            shadowProps["Distance"] = reader.ReadInt32();
+
+                            //Color: 2 bytes for space followed by 4 * 2 byte color component
+                            shadowProps["ColorSpace"]= reader.ReadInt16();
+                            var   colors = new int[4];
+                            for (int j = 0; j < colors.Length; j++)
+                            {
+                                colors[i] =reader.ReadInt16();
+                            }
+                            shadowProps["Color"] = colors;
+                            props["dsdw"] = shadowProps;
+//                            ShadowInfo.Parse(reader);
                         }
                         break;
                     case "sofi":
@@ -57,10 +73,30 @@ namespace Ntreev.Library.Psd.Readers.LayerResources
                             //this.solidFillInfo = SolidFillInfo.Parse(reader);
                         }
                         break;
+                    case "oglw":
+                    {
+                        Properties shadowProps = new Properties(12);
+                        shadowProps["Size"] = reader.ReadByte();
+                        shadowProps["Version"] = reader.ReadByte();
+                        shadowProps["BlurValue"] = reader.ReadInt32();
+                        shadowProps["Intensity"] = reader.ReadInt32();
+                        //Color: 2 bytes for space followed by 4 * 2 byte color component
+                        shadowProps["ColorSpace"] = reader.ReadInt16();
+                        var colors = new int[4];
+                        for (int j = 0; j < colors.Length; j++)
+                        {
+                            colors[i] = reader.ReadInt16();
+                        }
+                        shadowProps["outerGlowColor"] = colors;
+                        props[effectType] = shadowProps;
+                            break;
+                    }
                 }
 
                 reader.Position = p + size;
             }
+
+            value = props;
         }
     }
 }
