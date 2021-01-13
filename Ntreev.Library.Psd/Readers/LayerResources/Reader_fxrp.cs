@@ -22,6 +22,11 @@ using System.Text;
 
 namespace Ntreev.Library.Psd.Readers.LayerResources
 {
+
+    /// <summary>
+    /// changing text position will change this property, but changing alignment only won't change its value
+    /// so I assume this is more like the position  property
+    /// </summary>
     [ResourceID("fxrp")]
     class Reader_fxrp : ResourceReaderBase
     {
