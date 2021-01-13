@@ -22,6 +22,10 @@ using System.Text;
 
 namespace Ntreev.Library.Psd.Readers.LayerResources
 {
+    /// <summary>
+    /// text outline info in this effect layer
+    /// path : FrFx/Clr : Rd Rrn Bl is the  RGB Value（0-255）
+    /// </summary>
     [ResourceID("lfx2")]
     class Reader_lfx2 : ResourceReaderBase
     {
