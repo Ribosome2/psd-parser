@@ -25,6 +25,13 @@ namespace Ntreev.Library.Psd.Structures
 {
     class StructureEngineData : Properties
     {
+
+        /// <summary>
+        /// by comparing 3 different alignment text : looks like Alignment info is contain in
+        /// EngineData/EngineDict/ParagraphRun/RunArray[0]/ParagraphSheet/Properties/Justification
+        /// https://helpx.adobe.com/photoshop/using/formatting-paragraphs.html
+        /// </summary>
+        /// <param name="reader"></param>
         public StructureEngineData(PsdReader reader)
         {
             int length = reader.ReadInt32();

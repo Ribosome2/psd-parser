@@ -15,50 +15,23 @@
 //COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
 //OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Ntreev.Library.Psd.Structures;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Ntreev.Library.Psd
 {
-    class DescriptorStructure : Properties
+    /// <summary>
+    /// by comparing 3 different alignment text : looks like Alignment info is contain in
+    /// Resources/TySh/Text/EngineData/EngineDict/ParagraphRun/RunArray[0]/ParagraphSheet/Properties/Justification
+    /// https://helpx.adobe.com/photoshop/using/formatting-paragraphs.html
+    /// </summary>
+    /// <param name="reader"></param>
+    public enum ParagraphJustification
     {
-        private readonly int version;
-
-        public DescriptorStructure(PsdReader reader)
-            : this(reader, true)
-        {
-
-        }
-
-        public DescriptorStructure(PsdReader reader, bool hasVersion)
-        {
-            if (hasVersion == true)
-            {
-                this.version = reader.ReadInt32();
-            }
-
-            this.Add("Name", reader.ReadString());
-            this.Add("ClassID", reader.ReadKey());
-
-            int count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
-            {
-                string key = reader.ReadKey();
-                string osType = reader.ReadType();
-                if (key == "EngineData")
-                {
-                    var engineData = new StructureEngineData(reader);
-                    this.Add(key.Trim(),engineData);
-                }
-                else
-                {
-                    object value = StructureReader.Read(osType, reader);
-                    this.Add(key.Trim(), value);
-                }
-            }
-        }
+       Left =0,
+       Right=1,
+       Center=2,
     }
 }
